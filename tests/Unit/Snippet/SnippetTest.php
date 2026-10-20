@@ -62,6 +62,31 @@ final class SnippetTest extends TestCase
     }
 
     #[Test]
+    public function marksAScriptAsReadingConsentModeAndKeepsTheRest(): void
+    {
+        $snippet = Snippet::src('https://example.com/a.js', Placement::Head, Category::Marketing, ['async' => true])
+            ->readingConsentMode();
+
+        static::assertSame(
+            [Placement::Head, Category::Marketing, 'https://example.com/a.js', null, ['async' => true], true],
+            [
+                $snippet->placement,
+                $snippet->category,
+                $snippet->src,
+                $snippet->inline,
+                $snippet->attributes,
+                $snippet->consentMode,
+            ],
+        );
+    }
+
+    #[Test]
+    public function readsNoConsentModeUnlessMarked(): void
+    {
+        static::assertFalse(Snippet::inline('go();', Placement::Head, Category::Analytics)->consentMode);
+    }
+
+    #[Test]
     public function refusesAFallbackWithoutASrc(): void
     {
         $this->expectExceptionObject(InvalidSnippetException::because('A noscript fallback needs its src'));

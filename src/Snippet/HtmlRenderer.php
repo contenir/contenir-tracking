@@ -25,7 +25,10 @@ use const ENT_SUBSTITUTE;
  * nonce when one is given. When the site gates scripts behind consent, any
  * snippet that isn't necessary is written inert (type="text/plain" with its
  * data-category) for the consent banner to switch on, and its noscript
- * fallback is left out, since a visitor without scripts can't consent.
+ * fallback is left out, since a visitor without scripts can't consent. In
+ * Google's advanced Consent Mode, Google's own snippets are left running:
+ * they read the denied defaults and send only cookieless pings until the
+ * visitor consents.
  *
  * @api
  */
@@ -39,10 +42,12 @@ final readonly class HtmlRenderer
     private const array RESERVED = ['data-category', 'nonce', 'src', 'type'];
 
     /**
-     * @param bool $gate Whether the site gates scripts behind consent
+     * @param bool $gate                Whether the site gates scripts behind consent
+     * @param bool $advancedConsentMode Whether Google's snippets run before consent, reading Consent Mode
      */
     public function __construct(
         private bool $gate = false,
+        private bool $advancedConsentMode = false,
     ) {}
 
     /**
@@ -91,6 +96,15 @@ final readonly class HtmlRenderer
         return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, encoding: 'UTF-8');
     }
 
+    private function gates(Snippet $snippet): bool
+    {
+        return (
+            $this->gate
+                && Category::Necessary !== $snippet->category
+                && ! ($this->advancedConsentMode && $snippet->consentMode)
+        );
+    }
+
     private function noscript(Noscript $noscript): string
     {
         if ($this->gate && Category::Necessary !== $noscript->category) {
@@ -114,7 +128,7 @@ final readonly class HtmlRenderer
     private function script(Snippet $snippet, ?string $nonce): string
     {
         $tag = '<script';
-        if ($this->gate && Category::Necessary !== $snippet->category) {
+        if ($this->gates($snippet)) {
             $tag .= sprintf(' type="text/plain" data-category="%s"', $snippet->category->value);
         }
 
