@@ -112,6 +112,14 @@ site's own banner can.
 `<script type="text/plain" data-category="analytics|marketing">`, for a consent banner to switch on, and leaves out the
 noscript fallbacks. Only the Consent Mode bridge runs straight away.
 
+Google's snippets (the Google tag and Tag Manager) are marked as reading Consent Mode themselves
+(`Snippet::$consentMode`). In Google's advanced Consent Mode, `new HtmlRenderer(gate: true, advancedConsentMode: true)`
+leaves them running: they see the denied defaults and send Google only cookieless pings until the visitor consents.
+Every other snippet stays gated.
+
+A site with a consent banner should always wait for consent, whatever an older site's settings say, so the banner's
+choice is the only thing that grants anything. `TrackingConfig::waitingForConsent()` returns the config that way.
+
 ## Content Security Policy
 
 Every script carries the nonce passed to `render()`. The Tag Manager, Meta and LinkedIn loaders read their own

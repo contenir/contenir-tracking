@@ -10,14 +10,18 @@ use function stripos;
 
 /**
  * A script for a page: written inline or loaded from a URL, where it goes,
- * and the consent it needs.
+ * the consent it needs, and whether it is one of Google's, which read
+ * Consent Mode themselves.
  *
  * @api
  */
 final readonly class Snippet
 {
     /**
-     * @param array<string, string|bool> $attributes Extra attributes such as async; true writes the bare name
+     * @param array<string, string|bool> $attributes  Extra attributes such as async; true writes the bare name
+     * @param bool                       $consentMode Whether the script reads Google Consent Mode itself
+     *
+     * @mago-expect lint:excessive-parameter-list One parameter per part of a script element, and its Consent Mode mark.
      */
     private function __construct(
         public Placement $placement,
@@ -25,6 +29,7 @@ final readonly class Snippet
         public ?string $src,
         public ?string $inline,
         public array $attributes,
+        public bool $consentMode = false,
     ) {}
 
     /**
@@ -65,5 +70,15 @@ final readonly class Snippet
         }
 
         return new self($placement, $category, $src, null, $attributes);
+    }
+
+    /**
+     * The same script, marked as one that reads Google Consent Mode itself:
+     * it can run before the visitor consents, as Google's advanced Consent
+     * Mode has it, and sends Google only cookieless pings until they do.
+     */
+    public function readingConsentMode(): self
+    {
+        return new self($this->placement, $this->category, $this->src, $this->inline, $this->attributes, true);
     }
 }

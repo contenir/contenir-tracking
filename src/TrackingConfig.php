@@ -85,6 +85,27 @@ final readonly class TrackingConfig
     }
 
     /**
+     * The same config, waiting for consent whatever the settings say: what a
+     * site with a consent banner needs, so Google's defaults are denied,
+     * the Meta pixel starts revoked and LinkedIn waits until the banner's
+     * contenir:consent event allows them.
+     */
+    public function waitingForConsent(): self
+    {
+        return new self(
+            $this->tags,
+            new ConsentSettings(
+                waitForConsent: true,
+                regions: $this->consent->regions,
+                adSignals: $this->consent->adSignals,
+                urlPassthrough: $this->consent->urlPassthrough,
+            ),
+            $this->track,
+            $this->problems,
+        );
+    }
+
+    /**
      * Whether this environment writes any tags.
      */
     public function writesTags(): bool

@@ -4,7 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased] - 2026-10-20
+## [Unreleased] - 2026-10-21
+
+### Added
+
+- `Snippet::$consentMode` and `Snippet::readingConsentMode()`, which mark the Google tag's and Tag Manager's snippets
+  as reading Google Consent Mode themselves.
+- `HtmlRenderer`'s `advancedConsentMode` option, which leaves those snippets running while it gates the rest, for
+  Google's advanced Consent Mode.
+- `TrackingConfig::waitingForConsent()`, the same config waiting for consent whatever the settings say, for a site
+  with a consent banner.
+
+## [0.1.0] - 2026-10-20
 
 ### Added
 

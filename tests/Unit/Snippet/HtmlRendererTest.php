@@ -54,6 +54,16 @@ final class HtmlRendererTest extends TestCase
     }
 
     #[Test]
+    public function gatesGooglesSnippetsInBasicConsentMode(): void
+    {
+        $html = (new HtmlRenderer(gate: true))->render([
+            Snippet::inline('google();', Placement::Head, Category::Analytics)->readingConsentMode(),
+        ]);
+
+        static::assertSame('<script type="text/plain" data-category="analytics">google();</script>', $html);
+    }
+
+    #[Test]
     public function keepsAttributesItWritesItselfAndDropsUnsafeOrFalseOnes(): void
     {
         $snippet = Snippet::src('https://example.com/a.js', Placement::Head, Category::Analytics, [
@@ -81,6 +91,23 @@ final class HtmlRendererTest extends TestCase
         $snippet = Snippet::inline('go();', Placement::Head, Category::Necessary);
 
         static::assertSame('<script>go();</script>', (new HtmlRenderer(gate: true))->render([$snippet]));
+    }
+
+    #[Test]
+    public function leavesGooglesSnippetsRunningInAdvancedConsentMode(): void
+    {
+        $html = (new HtmlRenderer(
+            gate: true,
+            advancedConsentMode: true,
+        ))->render([
+            Snippet::inline('google();', Placement::Head, Category::Analytics)->readingConsentMode(),
+            Snippet::inline('meta();', Placement::Head, Category::Marketing),
+        ]);
+
+        static::assertSame(
+            "<script>google();</script>\n<script type=\"text/plain\" data-category=\"marketing\">meta();</script>",
+            $html,
+        );
     }
 
     #[Test]

@@ -58,8 +58,13 @@ final readonly class GoogleTag implements TagInterface
             );
 
         return [
-            Snippet::src(self::SRC . rawurlencode($this->id->value), Placement::Head, $category, ['async' => true]),
-            Snippet::inline("gtag('js', new Date());\n{$config}", Placement::Head, $category),
+            Snippet::src(
+                self::SRC . rawurlencode($this->id->value),
+                Placement::Head,
+                $category,
+                ['async' => true],
+            )->readingConsentMode(),
+            Snippet::inline("gtag('js', new Date());\n{$config}", Placement::Head, $category)->readingConsentMode(),
         ];
     }
 }

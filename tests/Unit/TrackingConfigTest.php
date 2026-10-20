@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Contenir\Tracking\Tests\Unit;
 
+use Contenir\Tracking\Consent\ConsentSettings;
+use Contenir\Tracking\Consent\Regions;
 use Contenir\Tracking\Provider;
 use Contenir\Tracking\SettingKeys;
 use Contenir\Tracking\Tests\TestAsset\Factory\SettingsFactory;
@@ -123,6 +125,34 @@ final class TrackingConfigTest extends TestCase
         $config = TrackingConfig::fromSettings(SettingsFactory::everyTag());
 
         static::assertSame([true, true], [$config->track, $config->writesTags()]);
+    }
+
+    #[Test]
+    public function waitsForConsentForABannerAndKeepsEverythingElse(): void
+    {
+        $config = TrackingConfig::fromSettings(SettingsFactory::everyTag([
+            SettingKeys::WAIT_FOR_CONSENT => '0',
+            SettingKeys::CONSENT_REGIONS  => 'ES, US-CA',
+            SettingKeys::AD_SIGNALS       => '0',
+            SettingKeys::URL_PASSTHROUGH  => '1',
+            SettingKeys::GOOGLE_TAG       => 'UA-1234-1',
+        ]));
+        $waiting = $config->waitingForConsent();
+
+        static::assertEquals(
+            [
+                new ConsentSettings(
+                    waitForConsent: true,
+                    regions: Regions::parse('ES, US-CA'),
+                    adSignals: false,
+                    urlPassthrough: true,
+                ),
+                $config->tags,
+                true,
+                $config->problems,
+            ],
+            [$waiting->consent, $waiting->tags, $waiting->track, $waiting->problems],
+        );
     }
 
     #[Test]

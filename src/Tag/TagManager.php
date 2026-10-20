@@ -69,7 +69,7 @@ final readonly class TagManager implements TagInterface
             ],
         );
 
-        $snippets = [Snippet::inline($code, Placement::Head, Category::Analytics)];
+        $snippets = [Snippet::inline($code, Placement::Head, Category::Analytics)->readingConsentMode()];
         if (! $consent->waitForConsent) {
             $snippets[] = Noscript::frame(
                 self::NOSCRIPT . rawurlencode($this->id->value),

@@ -45,7 +45,7 @@ final class TagManagerTest extends TestCase
     {
         static::assertEquals(
             [
-                Snippet::inline(self::LOADER, Placement::Head, Category::Analytics),
+                Snippet::inline(self::LOADER, Placement::Head, Category::Analytics)->readingConsentMode(),
                 Noscript::frame(
                     'https://www.googletagmanager.com/ns.html?id=GTM-ABCD123',
                     Placement::BodyStart,
@@ -60,7 +60,7 @@ final class TagManagerTest extends TestCase
     public function offersNoFrameWhileWaitingForConsent(): void
     {
         static::assertEquals(
-            [Snippet::inline(self::LOADER, Placement::Head, Category::Analytics)],
+            [Snippet::inline(self::LOADER, Placement::Head, Category::Analytics)->readingConsentMode()],
             (new TagManager(TagIdFactory::tagManager()))->snippets(new ConsentSettings()),
         );
     }

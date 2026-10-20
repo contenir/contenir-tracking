@@ -59,12 +59,12 @@ final class GoogleTagTest extends TestCase
                     Placement::Head,
                     Category::Analytics,
                     ['async' => true],
-                ),
+                )->readingConsentMode(),
                 Snippet::inline(
                     "gtag('js', new Date());\ngtag('config', \"G-ABC1234567\");",
                     Placement::Head,
                     Category::Analytics,
-                ),
+                )->readingConsentMode(),
             ],
             $snippets,
         );
