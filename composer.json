@@ -1,5 +1,5 @@
 {
-    "name": "contenir/tracking",
+    "name": "contenir/contenir-tracking",
     "description": "Framework-free analytics and tracking tags for Contenir: tag definitions (Google tag, Tag Manager, Meta pixel, LinkedIn Insight), Consent Mode v2, ID validation and snippet rendering with a CSP nonce.",
     "type": "library",
     "license": "BSD-3-Clause",
@@ -23,6 +23,9 @@
         "contenir/contenir-qa-tools": "0.1.x-dev",
         "infection/infection": "^0.34.1",
         "phpunit/phpunit": "^11.5.42"
+    },
+    "replace": {
+        "contenir/tracking": "self.version"
     },
     "autoload": {
         "psr-4": {

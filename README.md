@@ -1,4 +1,4 @@
-# contenir/tracking
+# contenir/contenir-tracking
 
 [![Continuous Integration](https://github.com/contenir/contenir-tracking/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/contenir/contenir-tracking/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/contenir/contenir-tracking/graph/badge.svg)](https://codecov.io/gh/contenir/contenir-tracking)
@@ -12,14 +12,21 @@ Framework-free analytics and tracking tags for [Contenir](https://github.com/con
 
 It has no framework dependency. Sites use it through an adapter, and the CMS through an add-on:
 
-- **Laminas MVC sites:** [contenir/tracking-laminas-mvc](https://github.com/contenir/contenir-tracking-laminas-mvc)
-  adds a `tracking()` view helper with `head()` and `bodyStart()`.
+- **Laminas MVC sites:**
+  [contenir/contenir-tracking-laminas-mvc](https://github.com/contenir/contenir-tracking-laminas-mvc) adds a
+  `tracking()` view helper with `head()` and `bodyStart()`.
 - **The CMS:** the [Tracking add-on](https://github.com/contenir-extension/tracking) (`contenir-extension/tracking`)
   holds the settings section, validates each ID as it is saved, and offers the tags to the CMS's script contract.
 
 ## Requirements
 
 - PHP 8.3, 8.4 or 8.5
+
+## Install
+
+```bash
+composer require contenir/contenir-tracking
+```
 
 ## Usage
 

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Contenir\Tracking\Snippet;
 
 /**
- * Where on a page a snippet goes. The values match contenir/extension-api's
- * Script\Placement, so an add-on can pass them straight through.
+ * Where on a page a snippet goes. The values match
+ * contenir/contenir-extension-api's Script\Placement, so an add-on can pass
+ * them straight through.
  *
  * @api
  */
