@@ -7,7 +7,7 @@ namespace Contenir\Tracking\Snippet;
 /**
  * The consent a visitor gives before a snippet may run. Necessary snippets
  * always run; when a site gates scripts, the others are written inert until
- * the visitor agrees. The values match contenir/extension-api's
+ * the visitor agrees. The values match contenir/contenir-extension-api's
  * Script\ConsentCategory.
  *
  * @api
